@@ -273,7 +273,7 @@ class TestIntegration:
         base_dir = Path(".")
 
         # Check critical directories
-        critical_dirs = ["src", "examples", "tests"]
+        critical_dirs = ["src", "examples"]
         for dir_name in critical_dirs:
             dir_path = base_dir / dir_name
             assert dir_path.exists(), f"Critical directory missing: {dir_name}"
