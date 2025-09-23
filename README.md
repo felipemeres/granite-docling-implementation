@@ -34,7 +34,7 @@ The IBM Granite Docling 258M is a state-of-the-art Vision-Language Model (VLM) d
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/yourusername/granite-docling-implementation.git
+git clone https://github.com/felipemeres/granite-docling-implementation.git
 cd granite-docling-implementation
 ```
 
