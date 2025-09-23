@@ -12,10 +12,14 @@ from typing import Union, Optional, Dict, Any
 
 from docling.document_converter import DocumentConverter, PdfFormatOption
 from docling.datamodel.base_models import InputFormat
-from docling.datamodel.pipeline_options import PdfPipelineOptions, VlmPipelineOptions
+from docling.datamodel.pipeline_options import (
+    PdfPipelineOptions,
+    VlmPipelineOptions,
+    ResponseFormat,
+    AcceleratorDevice,
+    vlm_model_specs
+)
 from docling.pipeline.vlm_pipeline import VlmPipeline
-from docling.datamodel.pipeline_options_vlm_model import InlineVlmOptions, InferenceFramework, TransformersModelType
-from docling.datamodel.base_models import ResponseFormat, AcceleratorDevice
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -32,24 +36,24 @@ class GraniteDocling:
 
     def __init__(
         self,
-        model_repo_id: str = "ibm-granite/granite-docling-258M",
-        temperature: float = 0.0,
-        scale: float = 2.0,
+        model_type: str = "transformers",
         artifacts_path: Optional[str] = None
     ):
         """
         Initialize the Granite Docling processor.
 
         Args:
-            model_repo_id: HuggingFace model repository ID
-            temperature: Sampling temperature for generation
-            scale: Scaling factor for vision processing
+            model_type: Model type - "transformers" or "mlx"
             artifacts_path: Path to cached model artifacts
         """
-        self.model_repo_id = model_repo_id
-        self.temperature = temperature
-        self.scale = scale
+        self.model_type = model_type.lower()
         self.artifacts_path = artifacts_path
+
+        # Choose the appropriate model configuration
+        if self.model_type == "mlx":
+            self.vlm_model = vlm_model_specs.GRANITEDOCLING_MLX
+        else:
+            self.vlm_model = vlm_model_specs.GRANITEDOCLING_TRANSFORMERS
 
         # Initialize the document converter
         self._setup_converter()
@@ -57,24 +61,8 @@ class GraniteDocling:
     def _setup_converter(self):
         """Set up the document converter with Granite Docling configuration."""
 
-        # Configure VLM pipeline options for Granite Docling
-        vlm_options = InlineVlmOptions(
-            repo_id=self.model_repo_id,
-            prompt="Convert this document to markdown. Preserve all text, structure, and formatting. Be accurate and comprehensive.",
-            response_format=ResponseFormat.MARKDOWN,
-            inference_framework=InferenceFramework.TRANSFORMERS,
-            transformers_model_type=TransformersModelType.AUTOMODEL_VISION2SEQ,
-            supported_devices=[
-                AcceleratorDevice.CPU,
-                AcceleratorDevice.CUDA,
-                AcceleratorDevice.MPS,
-            ],
-            scale=self.scale,
-            temperature=self.temperature,
-        )
-
-        # Set up pipeline options
-        pipeline_options = VlmPipelineOptions(vlm_options=vlm_options)
+        # Set up VLM pipeline options using the pre-configured Granite Docling model
+        pipeline_options = VlmPipelineOptions(vlm_options=self.vlm_model)
 
         # Configure PDF processing options
         pdf_options = PdfFormatOption(
@@ -94,7 +82,7 @@ class GraniteDocling:
             }
         )
 
-        logger.info(f"Initialized Granite Docling with model: {self.model_repo_id}")
+        logger.info(f"Initialized Granite Docling with model type: {self.model_type}")
 
     def convert_document(
         self,
@@ -131,9 +119,8 @@ class GraniteDocling:
                 "format": output_format,
                 "pages": len(document.pages) if hasattr(document, 'pages') else 1,
                 "metadata": {
-                    "model": self.model_repo_id,
-                    "temperature": self.temperature,
-                    "scale": self.scale
+                    "model_type": self.model_type,
+                    "model_config": str(self.vlm_model.__class__.__name__)
                 }
             }
 
