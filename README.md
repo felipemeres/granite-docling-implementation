@@ -1,8 +1,7 @@
 # Granite Docling 258M Implementation
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
-[![Production Ready](https://img.shields.io/badge/status-production%20ready-brightgreen.svg)](PRODUCTION_READINESS_REPORT.md)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](#-license)
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/fmeres/granite-docling-demo)
 
 A production-ready implementation of the IBM Granite Docling 258M Vision-Language Model for advanced document processing and conversion.
@@ -244,14 +243,13 @@ Contributions are welcome! Please:
 
 ## 📄 License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details. The implementation follows the same licensing terms as the original IBM Granite Docling model.
+This project is licensed under the Apache License 2.0. The implementation follows the same licensing terms as the original IBM Granite Docling model.
 
 ## 🔗 Resources
 
 - **🤗 Live Demo**: [Granite Docling 258M Demo on Hugging Face Spaces](https://huggingface.co/spaces/fmeres/granite-docling-demo)
 - **Model**: [IBM Granite Docling 258M on HuggingFace](https://huggingface.co/ibm-granite/granite-docling-258M)
 - **Documentation**: [Docling Documentation](https://github.com/DS4SD/docling)
-- **Paper**: [Granite Technical Report](https://arxiv.org/abs/2310.xxxxx)
 
 ## 🏆 Acknowledgments
 
